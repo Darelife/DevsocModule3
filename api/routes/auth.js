@@ -116,4 +116,31 @@ router.delete("/users/:userId", async (req, res) => {
     });
 });
 
+// Admin Command
+router.patch("/users/:userId", async (req, res) => {
+  const id = req.params.username;
+  const token = req.header("Authorization");
+  if (!token) return res.status(401).json({ error: "No header" });
+  const decoded = jwt.verify(token, process.env.JWT_KEY);
+  if (decoded.userId !== "darelife" && decoded.password !== "darelife") {
+    return res.status(401).json({ error: "Access denied" });
+  }
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  User.updateOne({ _id: id }, { $set: updateOps })
+    .exec()
+    .then((result) => {
+      console.log(result);
+      res.status(201).json(result);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        error: error,
+      });
+    });
+});
+
 module.exports = router;

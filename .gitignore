@@ -1,5 +1,5 @@
 .env
 nodemon.json
-package.json
-package-lock.json
+# package.json
+# package-lock.json
 node_modules

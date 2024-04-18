@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Admin Command
 router.post("/add", async (req, res) => {
   try {
     const {
@@ -54,6 +55,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
+// Admin Command
 router.delete("/:productId", (req, res, next) => {
   const id = req.params.productId;
   const mov = movies.findById(id);
@@ -85,6 +87,7 @@ router.delete("/:productId", (req, res, next) => {
     });
 });
 
+// Admin Command
 router.patch("/:productId", (req, res, next) => {
   const id = req.params.productId;
   const token = req.header("Authorization");
@@ -157,10 +160,14 @@ router.post("/buy", async (req, res) => {
       }
       movie.seatsRemaining -= quantity;
       movie.seatsSold += quantity;
-
+      user.save();
       movie.save().then((result) => {
         console.log(result);
-        res.status(201).json({ message: "Movie bought successfully", movie });
+        res.status(201).json({
+          message: "Movie bought successfully",
+          movie: movie,
+          user: user,
+        });
       });
     });
   } catch (error) {
