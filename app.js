@@ -23,7 +23,7 @@ app.use("/movies", movies);
 
 app.route("/").get((req, res) => {
   res.status(200).json({
-    message: "Welcome to the DareLife API!",
+    message: "Welcome to the DareLife's Movie Booking API!",
     routes: {
       auth: "/auth",
       movies: "/movies",
@@ -84,6 +84,13 @@ app.route("/").get((req, res) => {
           "Delete a user from the database",
           "Authorization Header -> { userId: <adminUsername>, password: <adminPassword> }",
           "Body -> { password: <password> }",
+        ],
+      },
+      home: {
+        "GET /": [
+          "Welcome to the DareLife's Movie Booking API!",
+          "This is the home route of the API",
+          "Documentation: /auth, /movies",
         ],
       },
     },
