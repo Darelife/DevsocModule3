@@ -21,6 +21,75 @@ app.use("/protectedRoute", protectedRoute);
 app.use("/auth", auth);
 app.use("/movies", movies);
 
+app.route("/").get((req, res) => {
+  res.status(200).json({
+    message: "Welcome to the DareLife API!",
+    routes: {
+      auth: "/auth",
+      movies: "/movies",
+    },
+    documentation: {
+      movies: {
+        "GET /movies": [
+          "Returns a list of all movies in the database",
+          "No Authorization Header Required",
+          "Regular User Command: View all movies in the database",
+        ],
+        "POST /movies/add": [
+          "Requires Authorization Header",
+          "Admin Command",
+          "Add a movie to the database",
+          "Authorization Header -> { userId: <adminUsername>, password: <adminPassword> }",
+          "Body -> { movieName: <movieName>, price: <price>, productImage: <productImage>, seatsRemaining: <seatsRemaining>, status: <status>, seatsSold: <seatsSold> }",
+        ],
+        "DELETE /movies/:productId": [
+          "Requires Authorization Header",
+          "Admin Command",
+          "Delete a movie from the database",
+          "Authorization Header -> { userId: <adminUsername>, password: <adminPassword> }",
+        ],
+        "PATCH /movies/:productId": [
+          "Requires Authorization Header",
+          "Admin Command",
+          "Update a movie in the database",
+          "Authorization Header -> { userId: <adminUsername>, password: <adminPassword> }",
+          "Body -> [{ propName: <propertyToChange>, value: <newValue> }, { propName: <propertyToChange>, value: <newValue>}]",
+        ],
+        "POST /movies/buy": [
+          "Requires Authorization Header",
+          "Regular User Command",
+          "Buy a ticket for a movie, decrement the seatsRemaining and increment the seatsSold for that movie in the database",
+          "Add the movie to the user's list of purchased movies in the database",
+          "Authorization Header -> { userId: <userId>, password: <password> }",
+          "Body -> { movieId: <movieId>, quantity: <quantity> }",
+        ],
+      },
+      auth: {
+        "POST /auth/register": [
+          "Register a new user",
+          "Body -> { username: <username>, password: <password> }",
+        ],
+        "POST /auth/login": [
+          "Login an existing user",
+          "Body -> { username: <username>, password: <password> }",
+        ],
+        "GET /auth/users": [
+          "Requires Authorization Header",
+          "Admin Command",
+          "View all users in the database",
+        ],
+        "DELETE /auth/users/:userId": [
+          "Requires Authorization Header",
+          "Admin Command",
+          "Delete a user from the database",
+          "Authorization Header -> { userId: <adminUsername>, password: <adminPassword> }",
+          "Body -> { password: <password> }",
+        ],
+      },
+    },
+  });
+});
+
 //if the request reaches this point, i.e., it wasn't able to find the above two routes, it throws the following error!
 app.use((req, res, next) => {
   const error = new Error("Not found");
